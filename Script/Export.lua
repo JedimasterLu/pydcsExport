@@ -1,0 +1,1 @@
+local pyExportlfs=require('lfs');dofile(pyExportlfs.writedir()..'Scripts/pyExport.lua')

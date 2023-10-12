@@ -1,0 +1,11 @@
+{
+    "Lua.diagnostics.globals": [
+        "LoGetModelTime"
+    ],
+    "Lua.diagnostics.disable": [
+        "lowercase-global"
+    ],
+    "qtForPython.designer.path": "D:\\Anaconda\\envs\\dcsapp\\Scripts\\pyside6-designer.exe",
+    "qtForPython.rcc.path": "D:\\Anaconda\\envs\\dcsapp\\Scripts\\pyside6-rcc.exe",
+    "qtForPython.uic.path": "D:\\Anaconda\\envs\\dcsapp\\Scripts\\pyside6-uic.exe"
+}
