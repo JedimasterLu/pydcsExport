@@ -14,17 +14,20 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="console">
+   <widget class="QTextBrowser" name="console">
     <property name="geometry">
      <rect>
-      <x>300</x>
-      <y>210</y>
-      <width>151</width>
-      <height>111</height>
+      <x>210</x>
+      <y>60</y>
+      <width>381</width>
+      <height>431</height>
      </rect>
     </property>
-    <property name="text">
-     <string>TextLabel</string>
+    <property name="font">
+     <font>
+      <family>Calibri</family>
+      <italic>true</italic>
+     </font>
     </property>
    </widget>
   </widget>

@@ -7,16 +7,20 @@ local c = assert(socket.connect(ip, port))
 c:settimeout(0)
 
 local last_msg = nil
-
+local index = 0
 print("Connected!")
-while 1 do
-    c:send('test')
+while true do
+    index = index + 1
+    c:send('test\n')
     local s, status, partial = c:receive()
-    if s ~= last_msg then
-        print("Server: ",s)
-        last_msg = s
-    end
+    socket.sleep(1)
+    print("Server: ",s)
     if status == "closed" then
+        c:send('quit\n')
+        break
+    end
+    if index > 5 then
+        c:send('quit\n')
         break
     end
 end
