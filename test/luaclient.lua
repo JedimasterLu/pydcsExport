@@ -8,19 +8,20 @@ c:settimeout(0)
 
 local last_msg = nil
 local index = 0
+
 print("Connected!")
 while true do
     index = index + 1
-    c:send('test\n')
+    c:send("test"..index)
     local s, status, partial = c:receive()
-    socket.sleep(1)
-    print("Server: ",s)
+    socket.sleep(0.001)
+    print(s)
     if status == "closed" then
-        c:send('quit\n')
+        c:send('quit')
         break
     end
     if index > 5 then
-        c:send('quit\n')
+        c:send('quit')
         break
     end
 end

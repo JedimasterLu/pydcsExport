@@ -2,10 +2,11 @@ import sys
 import socket
 from PySide6.QtCore import Slot, QThread, Signal
 from PySide6.QtWidgets import QApplication, QMainWindow
-from src.ui.DCSExport_ui import Ui_MainWindow
+from src import Ui_MainWindow, add_time, get_country_name
 
 class ServerThread(QThread):
 
+    waiting_signal = Signal(str)
     connected_signal = Signal(str)
     received_msg = Signal(str)
     close_signal = Signal(str)
@@ -20,26 +21,27 @@ class ServerThread(QThread):
 
     def run(self):
         while True:
-            print("Waiting for connection...")
+            self.waiting_signal.emit("Server: Waiting for client...")
             self.connection, address = self.server.accept()
-            self.connected_signal.emit("Server connected!")
+            self.connected_signal.emit(f"Server: Connected to client {address}.")
             while True:
                 msg = self.connection.recv(1024)
                 msg = msg.decode('utf-8')
-                if msg == "quit\n":
+                if msg == "quit":
                     break
-                self.received_msg.emit(msg)
+                msg = add_time(msg)
+                self.received_msg.emit(f'  Client: {msg}')
                 send_msg = 'test'
-                self.connection.send(bytes(send_msg, encoding='utf-8'))
-            self.server.close()
-            self.close_signal.emit("Server closed!")
+                self.connection.send(bytes(f'{send_msg}\n', encoding='utf-8'))
+            self.connection.close()
+            self.close_signal.emit("Server: Connection closed!")
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setupUi(self)
 
-        self.console.setText('Console:\n')
+        self.console.setText('Console:')
         
         self.setup_server_thread()
 
