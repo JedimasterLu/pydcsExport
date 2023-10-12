@@ -1,6 +1,6 @@
 import sys
 from PySide6.QtWidgets import QApplication, QMainWindow
-import src.DCSExport_ui as DCSExport_ui
+from src import DCSExport_ui
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
