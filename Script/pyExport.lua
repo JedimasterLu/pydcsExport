@@ -9,9 +9,12 @@ function LuaExportStart()
     package.path  = package.path..";"..lfs.currentdir().."/LuaSocket/?.lua"
     package.cpath = package.cpath..";"..lfs.currentdir().."/LuaSocket/?.dll"
     socket = require("socket")
-    host = '2.0.0.1'
-    port = 8080
-    c = assert(socket.connect(host, port)) -- connect to the listener socket
+
+    local myHostName = socket.dns.gethostname()
+    local host = tostring(socket.dns.toip(myHostName))
+    local port = 8080
+    c = assert(socket.connect(host, port)) -- Connect to the listener socket
+    --[[
     targf = 1.0 -- G-Force (normal acceleration)
     tarrrt = 0 -- Roll Rate
     taracc = 0 -- Tangential accleration
@@ -29,26 +32,28 @@ function LuaExportStart()
         pitch = 0,
         throttle = 0
     }
+    ]]--
 end
 
 
 function LuaExportStop()
-    c:send("Quit\n")
+    c:send("quit\n")
     c:close()
 end
 
 
 function LuaExportBeforeNextFrame()
-
+    --[[
     LoSetCommand(2001,pitchInput)
     LoSetCommand(2002,rollInput)
     LoSetCommand(2004,throttleInput)
-
+    --]]
     local curdata = GetMizDataString()
     c:send(curdata)
 
     local s, status, partial = c:receive()
     if s ~= nil then
+        --[[
         s = Split(s,' ')
         for i = 1,#s do
             s[i] = tonumber(s[i])
@@ -66,11 +71,12 @@ function LuaExportBeforeNextFrame()
         targf = s[1]
         tarrrt = s[2]
         taracc = s[3]
+        ]]--
     end
 end
 
 function LuaExportAfterNextFrame()
-
+    --[[
     local gf = 1
     local acc = 0
     local rrt = 0
@@ -124,10 +130,10 @@ function LuaExportAfterNextFrame()
     else
         framcnt = framcnt + 1
     end
-
+    --]]
 end
 
-
+--[[
 function Split(str,split)
     local lcSubStrTab = {}
     while true do
@@ -142,19 +148,20 @@ function Split(str,split)
     end
     return lcSubStrTab
 end
+]]--
 
-
+--[[
 function GetDataString()
     local acc = LoGetAccelerationUnits()
     local rrt = LoGetAngularVelocity()
     rrt = rrt.x
     return acc.x..' '..acc.y..' '..rrt..'\n'
 end
-
+]]--
 
 function GetMizDataString()
-    -- The message that is going to be sent to the server.
-    local msgstr = ""
+    -- The message that is going to be sent to the server. Define tags.
+    local msgstr = 'modelTime,missionStartTime,name,type,country,coalition,coalitionId,lat,long,alt,x,y,z,heading,pitch,bank,unitName,groupName\n'
     -- Get the objects' data into a table.
     local objectsTable = LoGetWorldObjects("units")
     if not objectsTable then
@@ -188,22 +195,28 @@ function GetMizDataString()
         end
         ]]--
         local name = aircraftData.Name
+        local type = LoGetNameByType(aircraftData.Type.level1, aircraftData.Type.level2, aircraftData.Type.level3, aircraftData.Type.level4)
+        local country = aircraftData.Country
+        local coalition = aircraftData.Coalition
+        local coalitionId = aircraftData.CoalitionID
+        local lat = aircraftData.LatLongAlt.Lat
+        local long = aircraftData.LatLongAlt.Long
+        local alt = aircraftData.LatLongAlt.Alt
         local x = aircraftData.Position.x
-        if not x then x = 0 end
-        local y = aircraftData.Position.z
-        if not y then y = 0 end
-        local altitude = aircraftData.LatLongAlt.Alt
-        if not altitude then altitude = 0 end
+        local y = aircraftData.Position.y
+        local z = aircraftData.Position.z
         local heading = aircraftData.Heading
-        if not heading then heading = 0 end
         local pitch = aircraftData.Pitch
-        if not pitch then pitch = 0 end
         local bank = aircraftData.Bank
-        if not bank then bank = 0 end
         local unitName = aircraftData.UnitName
-        msgstr = msgstr..name.." "..unitName.." "..x.." "..y.." "..altitude.." "..heading.." "..pitch.." "..bank.." "..vx.." "..vy.." "..vz..'\n'
+        local groupName = aircraftData.GroupName
+        -- More properties will be added here
+        msgstr = msgstr..modelTime..','..missionStartTime..','..name..','..type..','..country..','..coalition..','..coalitionId..','..lat..','..long..','..alt..','..x..','..y..','..z..','..heading..','..pitch..','..bank..','..unitName..','..groupName..'\n'
+
     end
+    --[[
     lastAircraftsTable = objectsTable
     lastModelTime = modelTime
+    ]]--
     return msgstr
 end
