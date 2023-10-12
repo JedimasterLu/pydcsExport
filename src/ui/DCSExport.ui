@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>776</width>
     <height>600</height>
    </rect>
   </property>
@@ -14,85 +14,31 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QSplitter" name="splitter">
+   <widget class="QLabel" name="console">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>801</width>
-      <height>551</height>
+      <x>300</x>
+      <y>210</y>
+      <width>151</width>
+      <height>111</height>
      </rect>
     </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
+    <property name="text">
+     <string>TextLabel</string>
     </property>
-    <widget class="QTableWidget" name="tableWidget">
-     <column>
-      <property name="text">
-       <string>ID</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Aircraft</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>x</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>y</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Altitude</string>
-      </property>
-     </column>
-    </widget>
-    <widget class="QScrollArea" name="scrollArea">
-     <property name="widgetResizable">
-      <bool>true</bool>
-     </property>
-     <widget class="QWidget" name="scrollAreaWidgetContents">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>69</width>
-        <height>549</height>
-       </rect>
-      </property>
-     </widget>
-    </widget>
    </widget>
   </widget>
-  <widget class="QMenuBar" name="menubar">
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>776</width>
      <height>22</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuOptions">
-    <property name="title">
-     <string>Options</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menuView">
-    <property name="title">
-     <string>View</string>
-    </property>
-   </widget>
-   <addaction name="menuOptions"/>
-   <addaction name="menuView"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>

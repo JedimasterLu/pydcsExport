@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 -- **************** 1 level ***************
 wsType_Air      = 1
 wsType_Ground   = 2

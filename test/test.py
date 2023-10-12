@@ -1,51 +1,70 @@
+# -*- coding: utf-8 -*-
 
-# This Python file uses the following encoding: utf-8
-import sys
-from PySide6.QtGui import QColor
-from PySide6.QtWidgets import (QApplication, QWidget, QTableWidget,
-                               QTableWidgetItem, QVBoxLayout)
- 
-colors = [("Red", "#FF0000"),
-          ("Green", "#00FF00"),
-          ("Blue", "#0000FF"),
-          ("Black", "#000000"),
-          ("White", "#FFFFFF"),
-          ("Electric Green", "#41CD52"),
-          ("Dark Blue", "#222840"),
-          ("Yellow", "#F9E56d")]
- 
- 
-def get_rgb_from_hex(code):
-    code_hex = code.replace("#", "")
-    rgb = tuple(int(code_hex[i:i+2], 16) for i in (0, 2, 4))
-    return QColor.fromRgb(rgb[0], rgb[1], rgb[2])
- 
- 
-class tableData(QWidget):
+import time
+
+
+from PySide6.QtCore import (QThread, Signal, Slot, QSize)
+from PySide6.QtWidgets import (QApplication, QPushButton, QLabel, QVBoxLayout, QWidget)
+
+
+class MyThread(QThread):
+    my_signal = Signal(int)
+    finished_signal = Signal()
+
+    def __init__(self, count):
+        super().__init__()
+        self.count: int = count
+
+    def run(self):
+        for idx in range(1, self.count + 1):
+            time.sleep(1)
+            # 任务进行时发出信号
+            self.my_signal.emit(idx)
+	    # 任务完成后发出信号
+        self.finished_signal.emit()
+
+
+class MainWindow(QWidget):
+
     def __init__(self, parent=None):
-        super(tableData, self).__init__(parent)
-        self.setWindowTitle("My TableData")
- 
-        self.table = QTableWidget()
-        self.table.setRowCount(len(colors))
-        self.table.setColumnCount(len(colors[0]) + 1)
-        self.table.setHorizontalHeaderLabels(["Name", "Hex Code", "Color"])
- 
-        for i, (name, code) in enumerate(colors):
-            item_name = QTableWidgetItem(name)
-            item_code = QTableWidgetItem(code)
-            item_color = QTableWidgetItem()
-            item_color.setBackground(get_rgb_from_hex(code))
-            self.table.setItem(i, 0, item_name)
-            self.table.setItem(i, 1, item_code)
-            self.table.setItem(i, 2, item_color)
- 
-        layout = QVBoxLayout(self)
-        layout.addWidget(self.table)
- 
- 
-if __name__ == "__main__":
+        super().__init__(parent=parent)
+        self.setup_ui()
+        #
+        self.button.clicked.connect(self.setup_thread)
+
+    def setup_ui(self):
+        self.setWindowTitle('demo')
+        self.resize(QSize(250, 180))
+        # 创建一个垂直布局
+        layout = QVBoxLayout()
+        # 创建一个标签
+        self.label = QLabel('This is a label => ')
+        layout.addWidget(self.label)
+        # 创建一个按钮
+        self.button = QPushButton('Send Request')
+        layout.addWidget(self.button)
+        # 将布局设置为主窗口的布局
+        self.setLayout(layout)
+        # 显示窗口
+        self.show()
+
+    def setup_thread(self):
+        self.thread_ = MyThread(count=5)
+        self.thread_.my_signal.connect(self.thread_progress)
+        self.thread_.finished_signal.connect(self.thread_finished)
+        self.thread_.start()
+
+    @Slot(int)
+    def thread_progress(self, item):
+        self.label.setText('This is a label => ' + str(item))
+
+    @Slot()
+    def thread_finished(self):
+        self.label.setText('This is a label finished.')
+
+
+if __name__ == '__main__':
     app = QApplication([])
-    window = tableData()
+    window = MainWindow()
     window.show()
-    sys.exit(app.exec())
+    app.exec()
