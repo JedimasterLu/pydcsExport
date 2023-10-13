@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>776</width>
+    <width>800</width>
     <height>600</height>
    </rect>
   </property>
@@ -17,10 +17,10 @@
    <widget class="QTextBrowser" name="console">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>60</y>
-      <width>381</width>
-      <height>431</height>
+      <x>360</x>
+      <y>290</y>
+      <width>441</width>
+      <height>271</height>
      </rect>
     </property>
     <property name="font">
@@ -30,6 +30,16 @@
      </font>
     </property>
    </widget>
+   <widget class="QTableWidget" name="table">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>361</width>
+      <height>561</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menuBar">
@@ -37,7 +47,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>776</width>
+     <width>800</width>
      <height>22</height>
     </rect>
    </property>

@@ -12,9 +12,13 @@ local index = 0
 print("Connected!")
 while true do
     index = index + 1
-    c:send("test"..index)
+    if index < 3 then
+        c:send('tag1,tag2,tag3\njml,150,80\n')
+    else
+        c:send('tag1,tag2,tag3,tag4\njml,150,80,1\n')
+    end
     local s, status, partial = c:receive()
-    socket.sleep(0.001)
+    socket.sleep(1)
     print(s)
     if status == "closed" then
         c:send('quit')
