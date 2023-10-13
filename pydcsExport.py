@@ -1,7 +1,7 @@
 import sys
 import socket
 from PySide6.QtCore import Slot, QThread, Signal
-from PySide6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem
+from PySide6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QMessageBox
 from PySide6.QtGui import QTextCursor
 from src import Ui_MainWindow, add_time, get_country_name
 
@@ -20,9 +20,10 @@ class ServerThread(QThread):
         self.server = socket.socket()				
         self.server.bind((host, port))				
         self.server.listen(1)
+        self.run_flag = True
     # Run server
     def run(self):
-        while True:
+        while self.run_flag:
             self.waiting_signal.emit("Server: Waiting for client...")
             self.connection, address = self.server.accept()
             self.connected_signal.emit(f"Server: Connected to client {address}.")
@@ -36,6 +37,10 @@ class ServerThread(QThread):
                 self.connection.send(bytes(f'{send_msg}\n', encoding='utf-8'))
             self.connection.close()
             self.close_signal.emit("Server: Connection closed!")
+    # Stop server
+    def stop(self):
+        self.terminate()
+        self.wait()
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -47,7 +52,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.last_msg = ''
         self.msg = ''
-
+    # Before closing window, ask if user want to quit and stop server thread
+    def closeEvent(self, event):
+        reply = QMessageBox.question(self, 'Message', "Are you sure to quit?", QMessageBox.Yes, QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            self.server_thread.stop()
+            event.accept()
+        else:
+            event.ignore()
+    # Start server thread
     def setup_server_thread(self):
         self.server_thread = ServerThread()
         self.server_thread.waiting_signal.connect(self.display_info_in_console)
@@ -57,7 +70,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.server_thread.close_signal.connect(self.display_info_in_console)
         self.server_thread.close_signal.connect(self.clear_msgs)
         self.server_thread.start()
-
     # Display msg in textBrowser if msg has been changed
     @Slot(str)
     def display_msg_in_console(self, received_msg:str):
@@ -111,12 +123,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             object_data = {}
             for index1, tag in enumerate(msg['tag']):
                 object_data[tag] = msg[index0][index1]
-            print(object_data)
             # Link column tag to its column index
             tag_index = {}
             for index2 in range(self.table.columnCount()):
                 tag_index[self.table.horizontalHeaderItem(index2).text()] = index2
-            print(tag_index)
             # Add data to the new row in the table
             for tag, data in object_data.items():
                 column_index = tag_index[tag]
