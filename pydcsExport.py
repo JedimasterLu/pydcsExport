@@ -1,9 +1,10 @@
 import sys
+import csv
 import socket
-from PySide6.QtCore import Slot, QThread, Signal
-from PySide6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QMessageBox
+from PySide6.QtCore import Slot, QThread, Signal, QDir
+from PySide6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QMessageBox, QInputDialog, QLineEdit
 from PySide6.QtGui import QTextCursor
-from src import Ui_MainWindow, add_time, get_country_name
+from src import Ui_MainWindow, add_time, get_country_name, get_date, get_time
 
 # Socket server thread
 class ServerThread(QThread):
@@ -16,7 +17,7 @@ class ServerThread(QThread):
     def __init__(self):
         super().__init__()
         host = '2.0.0.1'
-        port = 8000
+        port = 8080
         self.server = socket.socket()				
         self.server.bind((host, port))				
         self.server.listen(1)
@@ -30,7 +31,7 @@ class ServerThread(QThread):
             while True:
                 msg = self.connection.recv(1024)
                 msg = msg.decode('utf-8')
-                if msg == "quit":
+                if msg == "quit\n":
                     break
                 self.received_msg.emit(msg)
                 send_msg = 'test'
@@ -54,6 +55,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.msg = ''
     # Before closing window, ask if user want to quit and stop server thread
     def closeEvent(self, event):
+        self.clear_table()
         reply = QMessageBox.question(self, 'Message', "Are you sure to quit?", QMessageBox.Yes, QMessageBox.No)
         if reply == QMessageBox.Yes:
             self.server_thread.stop()
@@ -134,6 +136,48 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.table.setItem(self.table.rowCount()-1, column_index, data)
         # Refresh table
         self.table.viewport().update()
+    # Save table to csv file
+    @Slot()
+    def save_table_to_csv(self)->bool:
+        # Get file name
+        generated_name = f'{str(get_date())}-{str(get_time()).replace(":","")}-DCSExport'
+        text, ok = QInputDialog.getText(self, "Save Table",
+                                "Please enter file name:", QLineEdit.Normal,
+                                generated_name)
+        if ok and text:
+            file_path = f'data/table_save/{text}.csv'
+            with open(file_path, "w", encoding="utf-8", newline="") as f:
+                writer = csv.writer(f)
+                # Write headers
+                headers = []
+                for index in range(self.table.columnCount()):
+                    headers.append(self.table.horizontalHeaderItem(index).text())
+                writer.writerow(headers)
+                # Write data
+                for row in range(self.table.rowCount()):
+                    row_data = []
+                    for column in range(self.table.columnCount()):
+                        item = self.table.item(row, column)
+                        if item is not None:
+                            row_data.append(item.text())
+                        else:
+                            row_data.append('')
+                    writer.writerow(row_data)
+            return True
+        else:
+            return False
+    # Clear table
+    @Slot()
+    def clear_table(self):
+        # Ask if user want to clear table
+        reply = QMessageBox.question(self, 'Message', "Do you want to save table?", QMessageBox.Yes, QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            self.save_table_to_csv()
+        self.table.clear()
+        self.table.setColumnCount(0)
+        self.table.setRowCount(0)
+        self.table.viewport().update()
+    
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
