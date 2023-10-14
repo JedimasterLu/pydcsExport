@@ -1,8 +1,8 @@
 import sys
 import csv
 import socket
-from PySide6.QtCore import Slot, QThread, Signal, QDir
-from PySide6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QMessageBox, QInputDialog, QLineEdit
+from PySide6.QtCore import Slot, QThread, Signal, QCoreApplication, QRect
+from PySide6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QMessageBox, QInputDialog, QLineEdit, QTableWidget, QWidget, QSizePolicy
 from PySide6.QtGui import QTextCursor
 from src import Ui_MainWindow, add_time, get_country_name, get_date, get_time
 
@@ -49,6 +49,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         # Set console text
         self.console.setText('Console:')
+        # Set tabWidget
+        self.tabWidget.removeTab(1)
+        self.tabWidget.removeTab(0)
+
+        self.tables:list[QTableWidget] = []
+        self.tabs:list[QWidget] = []
+        self.tabs.append(QWidget())
+        self.tables.append(QTableWidget(self.tabs[0]))
+
+        self.tables[0].setGeometry(QRect(0, 0, 441, 531))
+        self.tabWidget.addTab(self.tabs[0], "")
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabs[0]), "Table 1")
         # Connect signals and slots of menubar
         self.actionSave.triggered.connect(self.save_table_to_csv)
         self.actionClear_table.triggered.connect(self.clear_table)
@@ -99,38 +111,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # Display msg in tableWidget
     @Slot(str)
     def display_msg_in_table(self, received_msg:str):
+        table = self.tables[self.tabWidget.currentIndex()]
         msg = self.msg_translate(received_msg)
         # Get all the column headers in table
         current_headers = []
-        for index in range(self.table.columnCount()):
-            current_headers.append(self.table.horizontalHeaderItem(index).text())
+        for index in range(table.columnCount()):
+            current_headers.append(table.horizontalHeaderItem(index).text())
         # Set and renew headers
         for tag in msg['tag']:
             if tag not in current_headers:
-                self.table.insertColumn(self.table.columnCount())
+                table.insertColumn(table.columnCount())
                 tag = QTableWidgetItem(tag)
-                self.table.setHorizontalHeaderItem(self.table.columnCount()-1, tag)
+                table.setHorizontalHeaderItem(table.columnCount()-1, tag)
         # Add rows
         for index0 in range(1, len(msg)):
-            self.table.insertRow(self.table.rowCount())
+            table.insertRow(table.rowCount())
             # Link the specific data of each line to its tag
             object_data = {}
             for index1, tag in enumerate(msg['tag']):
                 object_data[tag] = msg[index0][index1]
             # Link column tag to its column index
             tag_index = {}
-            for index2 in range(self.table.columnCount()):
-                tag_index[self.table.horizontalHeaderItem(index2).text()] = index2
+            for index2 in range(table.columnCount()):
+                tag_index[table.horizontalHeaderItem(index2).text()] = index2
             # Add data to the new row in the table
             for tag, data in object_data.items():
                 column_index = tag_index[tag]
                 data = QTableWidgetItem(data)
-                self.table.setItem(self.table.rowCount()-1, column_index, data)
+                table.setItem(table.rowCount()-1, column_index, data)
         # Refresh table
-        self.table.viewport().update()
+        table.viewport().update()
     # Save table to csv file
     @Slot()
     def save_table_to_csv(self)->bool:
+        table = self.tables[self.tabWidget.currentIndex()]
         # Get file name
         generated_name = f'{str(get_date())}-{str(get_time()).replace(":","")}-DCSExport'
         text, ok = QInputDialog.getText(self, "Save Table",
@@ -142,14 +156,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 writer = csv.writer(f)
                 # Write headers
                 headers = []
-                for index in range(self.table.columnCount()):
-                    headers.append(self.table.horizontalHeaderItem(index).text())
+                for index in range(table.columnCount()):
+                    headers.append(table.horizontalHeaderItem(index).text())
                 writer.writerow(headers)
                 # Write data
-                for row in range(self.table.rowCount()):
+                for row in range(table.rowCount()):
                     row_data = []
-                    for column in range(self.table.columnCount()):
-                        item = self.table.item(row, column)
+                    for column in range(table.columnCount()):
+                        item = table.item(row, column)
                         if item is not None:
                             row_data.append(item.text())
                         else:
@@ -158,17 +172,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return True
         else:
             return False
-    # Clear table
+    # Clear table of the current tab
     @Slot()
     def clear_table(self):
+        table = self.tables[self.tabWidget.currentIndex()]
         # Ask if user want to clear table
-        reply = QMessageBox.question(self, 'Message', "Do you want to save table?", QMessageBox.Yes, QMessageBox.No)
+        reply = QMessageBox.question(self, 'Message', f"Do you want to save {self.tabWidget.tabText(self.tabWidget.currentIndex())}?", 
+                                     QMessageBox.Yes, QMessageBox.No)
         if reply == QMessageBox.Yes:
             self.save_table_to_csv()
-        self.table.clear()
-        self.table.setColumnCount(0)
-        self.table.setRowCount(0)
-        self.table.viewport().update()
+        table.clear()
+        table.setColumnCount(0)
+        table.setRowCount(0)
+        table.viewport().update()
     
 
 if __name__ == '__main__':

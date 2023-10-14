@@ -17,10 +17,10 @@
    <widget class="QTextBrowser" name="console">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>290</y>
-      <width>441</width>
-      <height>271</height>
+      <x>440</x>
+      <y>0</y>
+      <width>361</width>
+      <height>561</height>
      </rect>
     </property>
     <property name="font">
@@ -30,33 +30,26 @@
      </font>
     </property>
    </widget>
-   <widget class="QTableWidget" name="table">
+   <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>361</width>
+      <width>441</width>
       <height>561</height>
      </rect>
     </property>
-   </widget>
-   <widget class="QTabWidget" name="tabWidget">
-    <property name="geometry">
-     <rect>
-      <x>360</x>
-      <y>0</y>
-      <width>441</width>
-      <height>291</height>
-     </rect>
+    <property name="currentIndex">
+     <number>0</number>
     </property>
-    <widget class="QWidget" name="tab">
+    <widget class="QWidget" name="tab_1">
      <attribute name="title">
-      <string>Tab 1</string>
+      <string>Table 1</string>
      </attribute>
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
-      <string>Tab 2</string>
+      <string>Table 2</string>
      </attribute>
     </widget>
    </widget>

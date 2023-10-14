@@ -16,9 +16,9 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QApplication, QHeaderView, QMainWindow, QMenu,
-    QMenuBar, QSizePolicy, QStatusBar, QTabWidget,
-    QTableWidget, QTableWidgetItem, QTextBrowser, QWidget)
+from PySide6.QtWidgets import (QApplication, QMainWindow, QMenu, QMenuBar,
+    QSizePolicy, QStatusBar, QTabWidget, QTextBrowser,
+    QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -33,20 +33,17 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName(u"centralwidget")
         self.console = QTextBrowser(self.centralwidget)
         self.console.setObjectName(u"console")
-        self.console.setGeometry(QRect(360, 290, 441, 271))
+        self.console.setGeometry(QRect(440, 0, 361, 561))
         font = QFont()
         font.setFamilies([u"Calibri"])
         font.setItalic(True)
         self.console.setFont(font)
-        self.table = QTableWidget(self.centralwidget)
-        self.table.setObjectName(u"table")
-        self.table.setGeometry(QRect(0, 0, 361, 561))
         self.tabWidget = QTabWidget(self.centralwidget)
         self.tabWidget.setObjectName(u"tabWidget")
-        self.tabWidget.setGeometry(QRect(360, 0, 441, 291))
-        self.tab = QWidget()
-        self.tab.setObjectName(u"tab")
-        self.tabWidget.addTab(self.tab, "")
+        self.tabWidget.setGeometry(QRect(0, 0, 441, 561))
+        self.tab_1 = QWidget()
+        self.tab_1.setObjectName(u"tab_1")
+        self.tabWidget.addTab(self.tab_1, "")
         self.tab_2 = QWidget()
         self.tab_2.setObjectName(u"tab_2")
         self.tabWidget.addTab(self.tab_2, "")
@@ -67,6 +64,9 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
+        self.tabWidget.setCurrentIndex(0)
+
+
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
 
@@ -80,8 +80,8 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(statustip)
         self.actionClear_table.setStatusTip(QCoreApplication.translate("MainWindow", u"Clear current table", None))
 #endif // QT_CONFIG(statustip)
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"Tab 1", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"Tab 2", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_1), QCoreApplication.translate("MainWindow", u"Table 1", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"Table 2", None))
         self.menuOptions.setTitle(QCoreApplication.translate("MainWindow", u"Options", None))
     # retranslateUi
 
