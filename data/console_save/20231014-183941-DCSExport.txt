@@ -1,0 +1,11 @@
+Console:
+18:39:30 Server: Waiting for client...
+18:39:32 Server: Connected to client ('2.0.0.1', 3591).
+18:39:32 Client: 'tag1,tag2,tag3\njml,150,80\n'
+18:39:33 Client: 'tag1,tag2,tag3\njml,150,80\n'
+18:39:34 Client: 'tag1,tag2,tag3,tag4,tag5\njml,150,80,1,15\n'
+18:39:35 Client: 'tag1,tag2,tag3,tag4,tag5\njml,150,80,1,15\n'
+18:39:36 Client: 'tag1,tag2,tag3,tag4,tag5\njml,150,80,1,15\n'
+18:39:37 Client: 'tag1,tag2,tag3,tag4,tag5\njml,150,80,1,15\n'
+18:39:38 Server: Connection closed!
+18:39:38 Server: Waiting for client...

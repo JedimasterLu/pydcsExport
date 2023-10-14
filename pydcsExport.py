@@ -68,6 +68,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionClear_table.triggered.connect(self.clear_tab)
         self.actionAdd_table.triggered.connect(self.add_new_table)
         self.actionClear_table_content.triggered.connect(self.clear_table)
+        self.actionSave_console.triggered.connect(self.save_console)
         # Begin server thread
         self.setup_server_thread()
 
@@ -84,6 +85,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.server_thread = ServerThread()
         self.server_thread.waiting_signal.connect(self.display_info_in_console)
         self.server_thread.connected_signal.connect(self.display_info_in_console)
+        self.server_thread.connected_signal.connect(self.add_new_table)
         self.server_thread.received_msg.connect(self.display_msg_in_console)
         self.server_thread.received_msg.connect(self.display_msg_in_table)
         self.server_thread.close_signal.connect(self.display_info_in_console)
@@ -99,6 +101,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def display_info_in_console(self, info:str):
         info = add_time(info) 
         self.console.append(info)
+    # Save console to txt file
+    @Slot()
+    def save_console(self):
+        # Get file name
+        generated_name = f'{str(get_date())}-{str(get_time()).replace(":","")}-DCSExport'
+        text, ok = QInputDialog.getText(self, "Save Console",
+                                "Please enter file name:", QLineEdit.Normal,
+                                generated_name)
+        if ok and text:
+            file_path = f'data/console_save/{text}.txt'
+            with open(file_path, "w", encoding="utf-8") as f:
+                f.write(self.console.toPlainText())
     # Translate msg str to dict
     def msg_translate(self, msg:str)->dict:
         data = {}
@@ -192,6 +206,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # Remove current tab
     @Slot()
     def clear_tab(self):
+        # Ask if user want to clear table
+        reply = QMessageBox.question(self, 'Message', f"Do you want to save {self.tabWidget.tabText(self.tabWidget.currentIndex())}?", 
+                                     QMessageBox.Yes, QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            self.save_table_to_csv()
         self.tabWidget.removeTab(self.tabWidget.currentIndex())
         self.tabs.pop(self.tabWidget.currentIndex())
         self.tables.pop(self.tabWidget.currentIndex())
@@ -204,6 +223,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tables[-1].setGeometry(QRect(0, 0, 441, 531))
         self.tabWidget.addTab(self.tabs[-1], "")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabs[-1]), f"Table {self.history_tabs_number}")
+        self.tabWidget.setCurrentIndex(self.tabWidget.indexOf(self.tabs[-1]))
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

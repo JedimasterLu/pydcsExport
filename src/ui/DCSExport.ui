@@ -69,6 +69,7 @@
      <string>Options</string>
     </property>
     <addaction name="actionSave"/>
+    <addaction name="actionSave_console"/>
     <addaction name="actionAdd_table"/>
     <addaction name="actionClear_table"/>
     <addaction name="actionClear_table_content"/>
@@ -104,6 +105,11 @@
   <action name="actionClear_table_content">
    <property name="text">
     <string>Clear table content</string>
+   </property>
+  </action>
+  <action name="actionSave_console">
+   <property name="text">
+    <string>Save console</string>
    </property>
   </action>
  </widget>
