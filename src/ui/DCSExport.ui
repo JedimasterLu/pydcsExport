@@ -40,6 +40,26 @@
      </rect>
     </property>
    </widget>
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>0</y>
+      <width>441</width>
+      <height>291</height>
+     </rect>
+    </property>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>Tab 1</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>Tab 2</string>
+     </attribute>
+    </widget>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menuBar">
@@ -51,7 +71,31 @@
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuOptions">
+    <property name="title">
+     <string>Options</string>
+    </property>
+    <addaction name="actionSave"/>
+    <addaction name="actionClear_table"/>
+   </widget>
+   <addaction name="menuOptions"/>
   </widget>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="statusTip">
+    <string>Save current table to .csv file</string>
+   </property>
+  </action>
+  <action name="actionClear_table">
+   <property name="text">
+    <string>Clear table</string>
+   </property>
+   <property name="statusTip">
+    <string>Clear current table</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

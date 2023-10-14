@@ -47,15 +47,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.setupUi(self)
+        # Set console text
         self.console.setText('Console:')
-        
+        # Connect signals and slots of menubar
+        self.actionSave.triggered.connect(self.save_table_to_csv)
+        self.actionClear_table.triggered.connect(self.clear_table)
+        # Begin server thread
         self.setup_server_thread()
 
-        self.last_msg = ''
-        self.msg = ''
     # Before closing window, ask if user want to quit and stop server thread
     def closeEvent(self, event):
-        self.clear_table()
         reply = QMessageBox.question(self, 'Message', "Are you sure to quit?", QMessageBox.Yes, QMessageBox.No)
         if reply == QMessageBox.Yes:
             self.server_thread.stop()
@@ -70,27 +71,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.server_thread.received_msg.connect(self.display_msg_in_console)
         self.server_thread.received_msg.connect(self.display_msg_in_table)
         self.server_thread.close_signal.connect(self.display_info_in_console)
-        self.server_thread.close_signal.connect(self.clear_msgs)
         self.server_thread.start()
     # Display msg in textBrowser if msg has been changed
     @Slot(str)
     def display_msg_in_console(self, received_msg:str):
-        self.msg = received_msg
-        if self.last_msg != self.msg:
-            self.last_msg = self.msg
-            self.console.moveCursor(QTextCursor.MoveOperation.End)  
-            self.console.append(add_time("Client: "))
-            self.console.insertPlainText(repr(self.msg))
+        self.console.moveCursor(QTextCursor.MoveOperation.End)  
+        self.console.append(add_time("Client: "))
+        self.console.insertPlainText(repr(received_msg))
     # Display information in textBrowser
     @Slot(str)
     def display_info_in_console(self, info:str):
         info = add_time(info) 
         self.console.append(info)
-    # Clear stored msgs
-    @Slot()
-    def clear_msgs(self):
-        self.last_msg = ''
-        self.msg = ''
     # Translate msg str to dict
     def msg_translate(self, msg:str)->dict:
         data = {}
