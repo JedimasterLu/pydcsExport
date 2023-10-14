@@ -2,7 +2,7 @@ import sys
 import csv
 import socket
 from PySide6.QtCore import Slot, QThread, Signal, QCoreApplication, QRect
-from PySide6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QMessageBox, QInputDialog, QLineEdit, QTableWidget, QWidget, QSizePolicy
+from PySide6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QMessageBox, QInputDialog, QLineEdit, QTableWidget, QWidget, QVBoxLayout
 from PySide6.QtGui import QTextCursor
 from src import Ui_MainWindow, add_time, get_country_name, get_date, get_time
 
@@ -49,6 +49,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         # Set console text
         self.console.setText('Console:')
+        # Set splitter
+        self.splitter.setStretchFactor(0, 3)
+        self.splitter.setStretchFactor(1, 2)
         # Set tabWidget
         self.tabWidget.removeTab(1)
         self.tabWidget.removeTab(0)
@@ -57,8 +60,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tabs:list[QWidget] = []
         self.tabs.append(QWidget())
         self.tables.append(QTableWidget(self.tabs[0]))
-
-        self.tables[0].setGeometry(QRect(0, 0, 441, 531))
+        verticalLayout = QVBoxLayout(self.tabs[0])
+        verticalLayout.addWidget(self.tables[0])
         self.tabWidget.addTab(self.tabs[0], "")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabs[0]), "Table 1")
         # Naming sequence for new tabs
@@ -220,7 +223,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.history_tabs_number += 1
         self.tabs.append(QWidget())
         self.tables.append(QTableWidget(self.tabs[-1]))
-        self.tables[-1].setGeometry(QRect(0, 0, 441, 531))
+        verticalLayout = QVBoxLayout(self.tabs[-1])
+        verticalLayout.addWidget(self.tables[-1])
         self.tabWidget.addTab(self.tabs[-1], "")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabs[-1]), f"Table {self.history_tabs_number}")
         self.tabWidget.setCurrentIndex(self.tabWidget.indexOf(self.tabs[-1]))

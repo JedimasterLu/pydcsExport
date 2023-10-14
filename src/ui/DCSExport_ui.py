@@ -16,9 +16,9 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QApplication, QMainWindow, QMenu, QMenuBar,
-    QSizePolicy, QStatusBar, QTabWidget, QTextBrowser,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QHBoxLayout, QMainWindow, QMenu,
+    QMenuBar, QSizePolicy, QSplitter, QStatusBar,
+    QTabWidget, QTextBrowser, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -39,22 +39,31 @@ class Ui_MainWindow(object):
         self.actionSave_console.setObjectName(u"actionSave_console")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.console = QTextBrowser(self.centralwidget)
-        self.console.setObjectName(u"console")
-        self.console.setGeometry(QRect(440, 0, 361, 561))
-        font = QFont()
-        font.setFamilies([u"Calibri"])
-        font.setItalic(True)
-        self.console.setFont(font)
-        self.tabWidget = QTabWidget(self.centralwidget)
+        self.horizontalLayout = QHBoxLayout(self.centralwidget)
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.splitter = QSplitter(self.centralwidget)
+        self.splitter.setObjectName(u"splitter")
+        self.splitter.setOrientation(Qt.Horizontal)
+        self.splitter.setHandleWidth(3)
+        self.tabWidget = QTabWidget(self.splitter)
         self.tabWidget.setObjectName(u"tabWidget")
-        self.tabWidget.setGeometry(QRect(0, 0, 441, 561))
         self.tab_1 = QWidget()
         self.tab_1.setObjectName(u"tab_1")
         self.tabWidget.addTab(self.tab_1, "")
         self.tab_2 = QWidget()
         self.tab_2.setObjectName(u"tab_2")
         self.tabWidget.addTab(self.tab_2, "")
+        self.splitter.addWidget(self.tabWidget)
+        self.console = QTextBrowser(self.splitter)
+        self.console.setObjectName(u"console")
+        font = QFont()
+        font.setFamilies([u"Calibri"])
+        font.setItalic(True)
+        self.console.setFont(font)
+        self.splitter.addWidget(self.console)
+
+        self.horizontalLayout.addWidget(self.splitter)
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -75,7 +84,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
