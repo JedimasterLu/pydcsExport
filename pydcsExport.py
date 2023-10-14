@@ -61,9 +61,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tables[0].setGeometry(QRect(0, 0, 441, 531))
         self.tabWidget.addTab(self.tabs[0], "")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabs[0]), "Table 1")
+        # Naming sequence for new tabs
+        self.history_tabs_number = 1
         # Connect signals and slots of menubar
         self.actionSave.triggered.connect(self.save_table_to_csv)
-        self.actionClear_table.triggered.connect(self.clear_table)
+        self.actionClear_table.triggered.connect(self.clear_tab)
+        self.actionAdd_table.triggered.connect(self.add_new_table)
+        self.actionClear_table_content.triggered.connect(self.clear_table)
         # Begin server thread
         self.setup_server_thread()
 
@@ -185,7 +189,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         table.setColumnCount(0)
         table.setRowCount(0)
         table.viewport().update()
-    
+    # Remove current tab
+    @Slot()
+    def clear_tab(self):
+        self.tabWidget.removeTab(self.tabWidget.currentIndex())
+        self.tabs.pop(self.tabWidget.currentIndex())
+        self.tables.pop(self.tabWidget.currentIndex())
+    # Add new tab with table
+    @Slot()
+    def add_new_table(self):
+        self.history_tabs_number += 1
+        self.tabs.append(QWidget())
+        self.tables.append(QTableWidget(self.tabs[-1]))
+        self.tables[-1].setGeometry(QRect(0, 0, 441, 531))
+        self.tabWidget.addTab(self.tabs[-1], "")
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabs[-1]), f"Table {self.history_tabs_number}")
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

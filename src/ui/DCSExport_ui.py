@@ -29,6 +29,12 @@ class Ui_MainWindow(object):
         self.actionSave.setObjectName(u"actionSave")
         self.actionClear_table = QAction(MainWindow)
         self.actionClear_table.setObjectName(u"actionClear_table")
+        self.actionAdd_table = QAction(MainWindow)
+        self.actionAdd_table.setObjectName(u"actionAdd_table")
+        self.actionClear_tab = QAction(MainWindow)
+        self.actionClear_tab.setObjectName(u"actionClear_tab")
+        self.actionClear_table_content = QAction(MainWindow)
+        self.actionClear_table_content.setObjectName(u"actionClear_table_content")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.console = QTextBrowser(self.centralwidget)
@@ -60,7 +66,9 @@ class Ui_MainWindow(object):
 
         self.menuBar.addAction(self.menuOptions.menuAction())
         self.menuOptions.addAction(self.actionSave)
+        self.menuOptions.addAction(self.actionAdd_table)
         self.menuOptions.addAction(self.actionClear_table)
+        self.menuOptions.addAction(self.actionClear_table_content)
 
         self.retranslateUi(MainWindow)
 
@@ -80,6 +88,9 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(statustip)
         self.actionClear_table.setStatusTip(QCoreApplication.translate("MainWindow", u"Clear current table", None))
 #endif // QT_CONFIG(statustip)
+        self.actionAdd_table.setText(QCoreApplication.translate("MainWindow", u"Add table", None))
+        self.actionClear_tab.setText(QCoreApplication.translate("MainWindow", u"Clear tab", None))
+        self.actionClear_table_content.setText(QCoreApplication.translate("MainWindow", u"Clear table content", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_1), QCoreApplication.translate("MainWindow", u"Table 1", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"Table 2", None))
         self.menuOptions.setTitle(QCoreApplication.translate("MainWindow", u"Options", None))
