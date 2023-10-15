@@ -194,20 +194,21 @@ function GetMizDataString()
             vz = (aircraftData.LatLongAlt.Alt-lastAircraftData.LatLongAlt.Alt) / deltatime
         end
         ]]--
+        local decimal = 4
         local name = aircraftData.Name
         local type = LoGetNameByType(aircraftData.Type.level1, aircraftData.Type.level2, aircraftData.Type.level3, aircraftData.Type.level4)
         local country = aircraftData.Country
         local coalition = aircraftData.Coalition
         local coalitionId = aircraftData.CoalitionID
-        local lat = aircraftData.LatLongAlt.Lat
-        local long = aircraftData.LatLongAlt.Long
-        local alt = aircraftData.LatLongAlt.Alt
-        local x = aircraftData.Position.x
-        local y = aircraftData.Position.y
-        local z = aircraftData.Position.z
-        local heading = aircraftData.Heading
-        local pitch = aircraftData.Pitch
-        local bank = aircraftData.Bank
+        local lat = string.format("%"..decimal.."f", aircraftData.LatLongAlt.Lat)
+        local long = string.format("%"..decimal.."f", aircraftData.LatLongAlt.Long)
+        local alt = string.format("%"..decimal.."f", aircraftData.LatLongAlt.Alt)
+        local x = string.format("%"..decimal.."f", aircraftData.Position.x)
+        local y = string.format("%"..decimal.."f", aircraftData.Position.y)
+        local z = string.format("%"..decimal.."f", aircraftData.Position.z)
+        local heading = string.format("%"..decimal.."f", aircraftData.Heading)
+        local pitch = string.format("%"..decimal.."f", aircraftData.Pitch)
+        local bank = string.format("%"..decimal.."f", aircraftData.Bank)
         local unitName = aircraftData.UnitName
         local groupName = aircraftData.GroupName
         -- More properties will be added here
@@ -218,5 +219,7 @@ function GetMizDataString()
     lastAircraftsTable = objectsTable
     lastModelTime = modelTime
     ]]--
+    msgstr = msgstr.."endOfMsg\n"
+
     return msgstr
 end

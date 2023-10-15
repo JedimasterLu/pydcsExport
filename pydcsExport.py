@@ -16,7 +16,7 @@ class ServerThread(QThread):
     # Initialize server
     def __init__(self):
         super().__init__()
-        host = '2.0.0.1'
+        host = socket.gethostbyname_ex(socket.gethostname())[2][0]
         port = 8080
         self.server = socket.socket()				
         self.server.bind((host, port))				
@@ -29,13 +29,23 @@ class ServerThread(QThread):
             self.connection, address = self.server.accept()
             self.connected_signal.emit(f"Server: Connected to client {address}.")
             while True:
-                msg = self.connection.recv(1024)
+                msg = b''
+                while True:
+                    tmp = self.connection.recv(1024)
+                    if not tmp:
+                        break
+                    msg += tmp
+                    if msg == b'quit\n':
+                        break
+                    if msg.endswith(b"endOfMsg\n"):
+                        break
                 msg = msg.decode('utf-8')
+                msg = msg.replace('endOfMsg\n', '')
                 if msg == "quit\n":
                     break
                 self.received_msg.emit(msg)
                 send_msg = 'test'
-                self.connection.send(bytes(f'{send_msg}\n', encoding='utf-8'))
+                self.connection.sendall(bytes(f'{send_msg}\n', encoding='utf-8'))
             self.connection.close()
             self.close_signal.emit("Server: Connection closed!")
     # Stop server
@@ -58,20 +68,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Set tabWidget
         self.tabWidget.removeTab(1)
         self.tabWidget.removeTab(0)
-
+        # Set tables and tabs list
         self.tables:list[QTableWidget] = []
         self.tabs:list[QWidget] = []
-        # Add first tab
-        self.tabs.append(QWidget())
-        self.tables.append(QTableWidget(self.tabs[0]))
-        verticalLayout = QVBoxLayout(self.tabs[0])
-        verticalLayout.addWidget(self.tables[0])
-        verticalLayout.setContentsMargins(0, 0, 0, 0)
-        verticalLayout.setSpacing(0)
-        self.tabWidget.addTab(self.tabs[0], "")
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabs[0]), "Table 1")
         # Naming sequence for new tabs
-        self.history_tabs_number = 1
+        self.history_tabs_number = 0
         # Connect signals and slots of menubar
         self.actionSave.triggered.connect(self.save_table_to_csv)
         self.actionClear_table.triggered.connect(self.clear_tab)
