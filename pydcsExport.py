@@ -165,6 +165,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             # Add data to the new row in the table
             for tag, data in object_data.items():
                 column_index = tag_index[tag]
+                if tag == 'country':
+                    data = get_country_name(int(data))
                 data = QTableWidgetItem(data)
                 table.setItem(table.rowCount()-1, column_index, data)
         # Refresh table
