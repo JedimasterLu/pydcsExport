@@ -13,6 +13,7 @@ class ServerThread(QThread):
     connected_signal = Signal(str)
     received_msg = Signal(str)
     close_signal = Signal(str)
+    reset_display_index = Signal(int)
     # Initialize server
     def __init__(self):
         super().__init__()
@@ -28,6 +29,7 @@ class ServerThread(QThread):
             self.waiting_signal.emit("Server: Waiting for client...")
             self.connection, address = self.server.accept()
             self.connected_signal.emit(f"Server: Connected to client {address}.")
+            self.reset_display_index.emit(0)
             while True:
                 msg = b''
                 while True:
@@ -48,6 +50,7 @@ class ServerThread(QThread):
                 self.connection.sendall(bytes(f'{send_msg}\n', encoding='utf-8'))
             self.connection.close()
             self.close_signal.emit("Server: Connection closed!")
+            self.reset_display_index.emit(-1)
     # Stop server
     def stop(self):
         self.terminate()
@@ -71,12 +74,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Set tables and tabs list
         self.tables:list[QTableWidget] = []
         self.tabs:list[QWidget] = []
+        self.display_index = -1
         # Naming sequence for new tabs
         self.history_tabs_number = 0
+        # Add the first table
+        self.add_new_table()
         # Connect signals and slots of menubar
         self.actionSave.triggered.connect(self.save_table_to_csv)
         self.actionClear_table.triggered.connect(self.clear_tab)
-        self.actionAdd_table.triggered.connect(self.add_new_table)
+        self.actionAdd_table.triggered.connect(self.add_new_table_forced)
         self.actionClear_table_content.triggered.connect(self.clear_table)
         self.actionSave_console.triggered.connect(self.save_console)
         # Begin server thread
@@ -99,6 +105,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.server_thread.received_msg.connect(self.display_msg_in_console)
         self.server_thread.received_msg.connect(self.display_msg_in_table)
         self.server_thread.close_signal.connect(self.display_info_in_console)
+        self.server_thread.reset_display_index.connect(self.set_display_index)
         self.server_thread.start()
     # Display msg in textBrowser if msg has been changed
     @Slot(str)
@@ -139,7 +146,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # Display msg in tableWidget
     @Slot(str)
     def display_msg_in_table(self, received_msg:str):
-        table = self.tables[self.tabWidget.currentIndex()]
+        table = self.tables[self.display_index]
         msg = self.msg_translate(received_msg)
         # Get all the column headers in table
         current_headers = []
@@ -229,6 +236,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # Add new tab with table
     @Slot()
     def add_new_table(self):
+        # Judge if current table is empty
+        if self.tables:
+            table = self.tables[self.tabWidget.currentIndex()]
+            if table.rowCount() == 0:
+                return
         self.history_tabs_number += 1
         self.tabs.append(QWidget())
         self.tables.append(QTableWidget(self.tabs[-1]))
@@ -239,6 +251,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tabWidget.addTab(self.tabs[-1], "")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabs[-1]), f"Table {self.history_tabs_number}")
         self.tabWidget.setCurrentIndex(self.tabWidget.indexOf(self.tabs[-1]))
+    # Add new tab with table without checking if current table is empty
+    @Slot()
+    def add_new_table_forced(self):
+        self.history_tabs_number += 1
+        self.tabs.append(QWidget())
+        self.tables.append(QTableWidget(self.tabs[-1]))
+        verticalLayout = QVBoxLayout(self.tabs[-1])
+        verticalLayout.addWidget(self.tables[-1])
+        verticalLayout.setContentsMargins(0, 0, 0, 0)
+        verticalLayout.setSpacing(0)
+        self.tabWidget.addTab(self.tabs[-1], "")
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabs[-1]), f"Table {self.history_tabs_number}")
+        self.tabWidget.setCurrentIndex(self.tabWidget.indexOf(self.tabs[-1]))
+    def set_display_index(self, index:int):
+        if index == -1:
+            self.display_index = -1
+        else:
+            self.display_index = self.tabWidget.currentIndex()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
