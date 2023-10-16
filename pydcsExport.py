@@ -66,8 +66,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setSpacing(0)
         # Set splitter
-        self.splitter.setStretchFactor(0, 3)
-        self.splitter.setStretchFactor(1, 2)
+        self.horizontalSplitter.setStretchFactor(0, 3)
+        self.horizontalSplitter.setStretchFactor(1, 2)
         # Set tabWidget
         self.tabWidget.removeTab(1)
         self.tabWidget.removeTab(0)
@@ -264,11 +264,37 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tabWidget.addTab(self.tabs[-1], "")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabs[-1]), f"Table {self.history_tabs_number}")
         self.tabWidget.setCurrentIndex(self.tabWidget.indexOf(self.tabs[-1]))
+    # Set the table that is going to display msg
     def set_display_index(self, index:int):
         if index == -1:
             self.display_index = -1
         else:
             self.display_index = self.tabWidget.currentIndex()
+    # Get data from current table by tag
+    def get_data_from_tag(self, tag:str)->list[str]:
+        table = self.tables[self.tabWidget.currentIndex()]
+        data = []
+        column = -1
+        for index in range(table.columnCount()):
+            if table.horizontalHeaderItem(index).text() == tag:
+                column = index
+                break
+        for row in range(table.rowCount()):
+            item = table.item(row, column)
+            if item is not None:
+                data.append(item.text())
+            else:
+                data.append('')
+        return data
+    # Set property combobox items from headers of current table
+    def set_propertyComboBox(self):
+        table = self.tables[self.tabWidget.currentIndex()]
+        self.propertyComboBox.clear()
+        # Get all the column headers in table
+        current_headers = []
+        for index in range(table.columnCount()):
+            current_headers.append(table.horizontalHeaderItem(index).text())
+        self.propertyComboBox.addItems(current_headers)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
