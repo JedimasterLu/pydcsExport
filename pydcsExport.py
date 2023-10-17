@@ -2,7 +2,7 @@ import sys
 import csv
 import socket
 from PySide6.QtCore import Slot, QThread, Signal, QCoreApplication, QRect
-from PySide6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QMessageBox, QInputDialog, QLineEdit, QTableWidget, QWidget, QVBoxLayout
+from PySide6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QMessageBox, QInputDialog, QLineEdit, QTableWidget, QWidget, QVBoxLayout, QListWidget
 from PySide6.QtGui import QTextCursor
 from src import Ui_MainWindow, add_time, get_country_name, get_date, get_time
 
@@ -79,6 +79,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.history_tabs_number = 0
         # Add the first table
         self.add_new_table()
+        # Set property selecter
+        self.objectListWidget.setSelectionMode(QListWidget.MultiSelection)
+        self.propertyComboBox.currentIndexChanged.connect(self.set_property_list_display)
         # Connect signals and slots of menubar
         self.actionSave.triggered.connect(self.save_table_to_csv)
         self.actionClear_table.triggered.connect(self.clear_tab)
@@ -104,6 +107,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.server_thread.connected_signal.connect(self.add_new_table)
         self.server_thread.received_msg.connect(self.display_msg_in_console)
         self.server_thread.received_msg.connect(self.display_msg_in_table)
+        self.server_thread.received_msg.connect(self.set_property_filter)
         self.server_thread.close_signal.connect(self.display_info_in_console)
         self.server_thread.reset_display_index.connect(self.set_display_index)
         self.server_thread.start()
@@ -287,14 +291,33 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 data.append('')
         return data
     # Set property combobox items from headers of current table
-    def set_propertyComboBox(self):
+    @Slot()
+    def set_property_filter(self):
         table = self.tables[self.tabWidget.currentIndex()]
-        self.propertyComboBox.clear()
-        # Get all the column headers in table
-        current_headers = []
+        # Get current items in combobox to a list
+        current_items = []
+        for index in range(self.propertyComboBox.count()):
+            current_items.append(self.propertyComboBox.itemText(index))
+        # Check all the column headers if they are already in comboBox. If not, add them
         for index in range(table.columnCount()):
-            current_headers.append(table.horizontalHeaderItem(index).text())
-        self.propertyComboBox.addItems(current_headers)
+            header = table.horizontalHeaderItem(index).text()
+            if header not in current_items:
+                self.propertyComboBox.addItem(header)
+    # Set property list display
+    @Slot(int)
+    def set_property_list_display(self, index:int):
+        data = self.get_data_from_tag(self.propertyComboBox.itemText(index))
+        self.objectListWidget.clear()
+        for item in data:
+            # Judge if item is already in listWidget
+            exist_flag = False
+            for index in range(self.objectListWidget.count()):
+                if self.objectListWidget.item(index).text() == item:
+                    exist_flag = True
+                    break
+            if not exist_flag:
+                self.objectListWidget.addItem(item)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
