@@ -16,11 +16,11 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QGroupBox, QHBoxLayout,
-    QLabel, QListWidget, QListWidgetItem, QMainWindow,
-    QMenu, QMenuBar, QScrollArea, QSizePolicy,
-    QSplitter, QStatusBar, QTabWidget, QTextBrowser,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QGroupBox,
+    QHBoxLayout, QLabel, QListWidget, QListWidgetItem,
+    QMainWindow, QMenu, QMenuBar, QScrollArea,
+    QSizePolicy, QSplitter, QStatusBar, QTabWidget,
+    QTextBrowser, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -64,10 +64,14 @@ class Ui_MainWindow(object):
         self.verticalSplitter.setOrientation(Qt.Vertical)
         self.scrollArea = QScrollArea(self.verticalSplitter)
         self.scrollArea.setObjectName(u"scrollArea")
+        self.scrollArea.viewport().setProperty("cursor", QCursor(Qt.ArrowCursor))
+        self.scrollArea.setAutoFillBackground(False)
+        self.scrollArea.setFrameShape(QFrame.StyledPanel)
+        self.scrollArea.setFrameShadow(QFrame.Plain)
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, -128, 509, 1000))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 521, 1000))
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -89,7 +93,7 @@ class Ui_MainWindow(object):
         font1.setItalic(True)
         self.groupBox_propertySelector.setFont(font1)
         self.groupBox_propertySelector.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
-        self.groupBox_propertySelector.setFlat(False)
+        self.groupBox_propertySelector.setFlat(True)
         self.verticalLayout_2 = QVBoxLayout(self.groupBox_propertySelector)
         self.verticalLayout_2.setSpacing(6)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
@@ -121,6 +125,8 @@ class Ui_MainWindow(object):
         self.objectListWidget.setObjectName(u"objectListWidget")
         self.objectListWidget.setMaximumSize(QSize(16777215, 16777215))
         self.objectListWidget.setFont(font2)
+        self.objectListWidget.setFrameShape(QFrame.Box)
+        self.objectListWidget.setFrameShadow(QFrame.Sunken)
 
         self.verticalLayout_2.addWidget(self.objectListWidget)
 
@@ -129,6 +135,8 @@ class Ui_MainWindow(object):
 
         self.groupBox = QGroupBox(self.scrollAreaWidgetContents)
         self.groupBox.setObjectName(u"groupBox")
+        self.groupBox.setFont(font1)
+        self.groupBox.setFlat(True)
 
         self.verticalLayout.addWidget(self.groupBox)
 
@@ -140,6 +148,9 @@ class Ui_MainWindow(object):
         font4.setFamilies([u"Calibri"])
         font4.setItalic(True)
         self.console.setFont(font4)
+        self.console.setFrameShape(QFrame.Box)
+        self.console.setFrameShadow(QFrame.Sunken)
+        self.console.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.verticalSplitter.addWidget(self.console)
         self.horizontalSplitter.addWidget(self.verticalSplitter)
 
@@ -189,7 +200,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"Table 2", None))
         self.groupBox_propertySelector.setTitle(QCoreApplication.translate("MainWindow", u"Property Selector", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Select the property to filter:", None))
-        self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"GroupBox", None))
+        self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"Settings", None))
         self.menuOptions.setTitle(QCoreApplication.translate("MainWindow", u"Options", None))
     # retranslateUi
 

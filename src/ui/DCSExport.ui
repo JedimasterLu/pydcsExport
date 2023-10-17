@@ -46,6 +46,18 @@
         <enum>Qt::Vertical</enum>
        </property>
        <widget class="QScrollArea" name="scrollArea">
+        <property name="cursor" stdset="0">
+         <cursorShape>ArrowCursor</cursorShape>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
         <property name="widgetResizable">
          <bool>true</bool>
         </property>
@@ -53,8 +65,8 @@
          <property name="geometry">
           <rect>
            <x>0</x>
-           <y>-128</y>
-           <width>509</width>
+           <y>0</y>
+           <width>521</width>
            <height>1000</height>
           </rect>
          </property>
@@ -106,7 +118,7 @@
              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
             </property>
             <property name="flat">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_2">
              <property name="spacing">
@@ -167,6 +179,12 @@
                  <bold>false</bold>
                 </font>
                </property>
+               <property name="frameShape">
+                <enum>QFrame::Box</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Sunken</enum>
+               </property>
               </widget>
              </item>
             </layout>
@@ -174,8 +192,19 @@
           </item>
           <item>
            <widget class="QGroupBox" name="groupBox">
+            <property name="font">
+             <font>
+              <family>Calibri</family>
+              <pointsize>11</pointsize>
+              <italic>true</italic>
+              <bold>true</bold>
+             </font>
+            </property>
             <property name="title">
-             <string>GroupBox</string>
+             <string>Settings</string>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -188,6 +217,15 @@
           <family>Calibri</family>
           <italic>true</italic>
          </font>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::Box</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Sunken</enum>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
         </property>
        </widget>
       </widget>
