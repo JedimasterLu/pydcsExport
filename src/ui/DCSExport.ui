@@ -53,8 +53,8 @@
          <property name="geometry">
           <rect>
            <x>0</x>
-           <y>0</y>
-           <width>502</width>
+           <y>-128</y>
+           <width>509</width>
            <height>1000</height>
           </rect>
          </property>
@@ -72,38 +72,104 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
-           <widget class="QLabel" name="label">
+           <widget class="QGroupBox" name="groupBox_propertySelector">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>300</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <family>Calibri</family>
-              <pointsize>10</pointsize>
+              <pointsize>11</pointsize>
               <italic>true</italic>
+              <bold>true</bold>
              </font>
             </property>
-            <property name="text">
-             <string>Select the property to filter:</string>
+            <property name="title">
+             <string>Property Selector</string>
             </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="propertyComboBox">
-            <property name="font">
-             <font>
-              <family>Calibri</family>
-              <italic>true</italic>
-             </font>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
             </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QListWidget" name="objectListWidget">
-            <property name="font">
-             <font>
-              <family>Calibri</family>
-              <pointsize>10</pointsize>
-              <italic>true</italic>
-             </font>
+            <property name="flat">
+             <bool>false</bool>
             </property>
+            <layout class="QVBoxLayout" name="verticalLayout_2">
+             <property name="spacing">
+              <number>6</number>
+             </property>
+             <property name="leftMargin">
+              <number>9</number>
+             </property>
+             <property name="topMargin">
+              <number>5</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Calibri</family>
+                 <pointsize>10</pointsize>
+                 <italic>true</italic>
+                 <bold>false</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Select the property to filter:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="propertyComboBox">
+               <property name="font">
+                <font>
+                 <family>Calibri</family>
+                 <pointsize>11</pointsize>
+                 <italic>true</italic>
+                 <bold>false</bold>
+                </font>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QListWidget" name="objectListWidget">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Calibri</family>
+                 <pointsize>10</pointsize>
+                 <italic>true</italic>
+                 <bold>false</bold>
+                </font>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
           <item>

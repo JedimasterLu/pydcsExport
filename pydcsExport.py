@@ -79,7 +79,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.history_tabs_number = 0
         # Add the first table
         self.add_new_table()
-        # Set property selecter
+        # Set property selector
         self.objectListWidget.setSelectionMode(QListWidget.MultiSelection)
         self.propertyComboBox.currentIndexChanged.connect(self.set_property_list_display)
         # Connect signals and slots of menubar
