@@ -2,7 +2,7 @@ import sys
 import csv
 import socket
 from PySide6.QtCore import Slot, QThread, Signal, QCoreApplication, QRect
-from PySide6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QMessageBox, QInputDialog, QLineEdit, QTableWidget, QWidget, QVBoxLayout, QListWidget
+from PySide6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QMessageBox, QInputDialog, QLineEdit, QTableWidget, QWidget, QVBoxLayout, QListWidget, QFrame
 from PySide6.QtGui import QTextCursor
 from src import Ui_MainWindow, add_time, get_country_name, get_date, get_time
 
@@ -252,6 +252,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         verticalLayout.addWidget(self.tables[-1])
         verticalLayout.setContentsMargins(0, 0, 0, 0)
         verticalLayout.setSpacing(0)
+        self.tables[-1].setFrameShape(QFrame.NoFrame)
+        self.tables[-1].setFrameShadow(QFrame.Plain)
         self.tabWidget.addTab(self.tabs[-1], "")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabs[-1]), f"Table {self.history_tabs_number}")
         self.tabWidget.setCurrentIndex(self.tabWidget.indexOf(self.tabs[-1]))
@@ -265,6 +267,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         verticalLayout.addWidget(self.tables[-1])
         verticalLayout.setContentsMargins(0, 0, 0, 0)
         verticalLayout.setSpacing(0)
+        self.tables[-1].setFrameShape(QFrame.NoFrame)
+        self.tables[-1].setFrameShadow(QFrame.Plain)
         self.tabWidget.addTab(self.tabs[-1], "")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabs[-1]), f"Table {self.history_tabs_number}")
         self.tabWidget.setCurrentIndex(self.tabWidget.indexOf(self.tabs[-1]))
