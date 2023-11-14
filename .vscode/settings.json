@@ -8,5 +8,6 @@
     "qtForPython.designer.path": "D:\\Anaconda\\envs\\dcsapp\\Scripts\\pyside6-designer.exe",
     "qtForPython.rcc.path": "D:\\Anaconda\\envs\\dcsapp\\Scripts\\pyside6-rcc.exe",
     "qtForPython.uic.path": "D:\\Anaconda\\envs\\dcsapp\\Scripts\\pyside6-uic.exe",
-    "Lua.workspace.checkThirdParty": false
+    "Lua.workspace.checkThirdParty": false,
+    "python.analysis.typeCheckingMode": "off"
 }

@@ -16,16 +16,22 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QSplitter" name="splitter">
+     <widget class="QSplitter" name="horizontalSplitter">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <property name="handleWidth">
-       <number>3</number>
-      </property>
       <widget class="QTabWidget" name="tabWidget">
+       <property name="font">
+        <font>
+         <family>Calibri</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="tabShape">
+        <enum>QTabWidget::Rounded</enum>
+       </property>
        <property name="currentIndex">
-        <number>1</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="tab_1">
         <attribute name="title">
@@ -38,13 +44,196 @@
         </attribute>
        </widget>
       </widget>
-      <widget class="QTextBrowser" name="console">
-       <property name="font">
-        <font>
-         <family>Calibri</family>
-         <italic>true</italic>
-        </font>
+      <widget class="QSplitter" name="verticalSplitter">
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
        </property>
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <widget class="QScrollArea" name="scrollArea">
+        <property name="cursor" stdset="0">
+         <cursorShape>ArrowCursor</cursorShape>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="scrollAreaWidgetContents">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>522</width>
+           <height>1000</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>1000</height>
+          </size>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <widget class="QGroupBox" name="groupBox_propertySelector">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>300</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Calibri</family>
+              <pointsize>11</pointsize>
+              <italic>true</italic>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="title">
+             <string>Property Selector</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_2">
+             <property name="spacing">
+              <number>6</number>
+             </property>
+             <property name="leftMargin">
+              <number>9</number>
+             </property>
+             <property name="topMargin">
+              <number>5</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Calibri</family>
+                 <pointsize>10</pointsize>
+                 <italic>true</italic>
+                 <bold>false</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Select the property to filter:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="propertyComboBox">
+               <property name="font">
+                <font>
+                 <family>Calibri</family>
+                 <pointsize>11</pointsize>
+                 <italic>true</italic>
+                 <bold>false</bold>
+                </font>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QListWidget" name="objectListWidget">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Calibri</family>
+                 <pointsize>10</pointsize>
+                 <italic>false</italic>
+                 <bold>false</bold>
+                </font>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::Box</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Sunken</enum>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox">
+            <property name="font">
+             <font>
+              <family>Calibri</family>
+              <pointsize>11</pointsize>
+              <italic>true</italic>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="title">
+             <string>Settings</string>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+       <widget class="QTextBrowser" name="console">
+        <property name="font">
+         <font>
+          <family>Calibri</family>
+          <italic>true</italic>
+         </font>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::Box</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Sunken</enum>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
+       </widget>
       </widget>
      </widget>
     </item>
