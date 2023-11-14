@@ -77,6 +77,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.display_index = -1
         # Naming sequence for new tabs
         self.history_tabs_number = 0
+        # Store the data in current table before change
+        self.table_data_storage = {
+            'table_index' : -1,
+            'table_data' : []
+        }
         # Add the first table
         self.add_new_table()
         # Set property selector
@@ -88,6 +93,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionAdd_table.triggered.connect(self.add_new_table_forced)
         self.actionClear_table_content.triggered.connect(self.clear_table)
         self.actionSave_console.triggered.connect(self.save_console)
+        # Connect signals and slots of objectListWidget
+        self.objectListWidget.itemSelectionChanged.connect(self.set_table_by_property)
         # Begin server thread
         self.setup_server_thread()
 
@@ -321,6 +328,71 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     break
             if not exist_flag:
                 self.objectListWidget.addItem(item)
+    # Change the display of current table by selected objects
+    @Slot()
+    def set_table_by_property(self):
+        if not self.propertyComboBox.currentText():
+            # Restore the data of current table
+            self.restore_table()
+            return
+        if self.objectListWidget.selectedItems() == []:
+            self.restore_table()
+            return
+        # Read selected objects in objectListWidget
+        selected_objects = self.objectListWidget.selectedItems()
+        for index in range(len(selected_objects)):
+            selected_objects[index] = selected_objects[index].text()
+        # Store the data of current table
+        current_table = self.tables[self.tabWidget.currentIndex()]
+        current_table_data = []
+        for row in range(current_table.rowCount()):
+            row_data = {}
+            for column in range(current_table.columnCount()):
+                item = current_table.item(row, column)
+                if item is not None:
+                    row_data[current_table.horizontalHeaderItem(column).text()] = item.text()
+                else:
+                    row_data[current_table.horizontalHeaderItem(column).text()] = ''
+            current_table_data.append(row_data)
+        if self.table_data_storage['table_data'] == []:
+            self.table_data_storage['table_data'] = current_table_data
+            self.table_data_storage['table_index'] = self.tabWidget.currentIndex()
+        # Set current table display according to selected objects
+        table = self.tables[self.tabWidget.currentIndex()]
+        # Clear table content
+        table.clearContents()
+        table.setRowCount(0)
+        # Add data of selected objects
+        for row in range(len(self.table_data_storage['table_data'])):
+            if not self.table_data_storage['table_data'][row][self.propertyComboBox.currentText()] in selected_objects:
+                continue
+            table.insertRow(table.rowCount())
+            for column in range(table.columnCount()):
+                data = self.table_data_storage['table_data'][row][table.horizontalHeaderItem(column).text()]
+                data = QTableWidgetItem(data)
+                table.setItem(table.rowCount()-1, column, data)
+        # Refresh table
+        table.viewport().update()
+    # Restore data to current table()
+    def restore_table(self):
+        # Restore the data of current table
+        if self.table_data_storage['table_data']:
+            table = self.tables[int(self.table_data_storage['table_index'])]
+            table.clearContents()
+            table.setRowCount(0)
+            for row in range(len(self.table_data_storage['table_data'])):
+                table.insertRow(table.rowCount())
+                for column in range(table.columnCount()):
+                    data = self.table_data_storage['table_data'][row][table.horizontalHeaderItem(column).text()]
+                    data = QTableWidgetItem(data)
+                    table.setItem(table.rowCount()-1, column, data)
+            # Refresh table
+            table.viewport().update()
+            # Clear storage
+            self.table_data_storage = {
+                'table_index' : -1,
+                'table_data' : []
+            }
 
 
 if __name__ == '__main__':
